@@ -6,11 +6,9 @@ repos:
       - id: check-ast
       - id: check-case-conflict
       - id: check-executables-have-shebangs
-        exclude: node_modules/
       - id: check-json
       - id: check-merge-conflict
       - id: check-shebang-scripts-are-executable
-        exclude: node_modules/
       - id: check-xml
       - id: check-yaml
       - id: detect-private-key
@@ -22,7 +20,6 @@ repos:
       - id: name-tests-test
         args: [--pytest-test-first]
       - id: pretty-format-json
-        exclude: '(node_modules/|package-lock\.json)'
       - id: requirements-txt-fixer
       - id: sort-simple-yaml
       - id: trailing-whitespace
@@ -31,7 +28,6 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        exclude: node_modules/
 
   - repo: https://github.com/psf/black
     rev: 24.1.1
@@ -48,7 +44,6 @@ repos:
     rev: v3.0.3
     hooks:
       - id: pylint
-        exclude: node_modules/
 
   - repo: https://github.com/sirosen/check-jsonschema
     rev: 0.28.0
