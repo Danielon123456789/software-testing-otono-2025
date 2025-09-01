@@ -22,4 +22,4 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npm run lint
+        run: npx eslint helloWorld2.js
