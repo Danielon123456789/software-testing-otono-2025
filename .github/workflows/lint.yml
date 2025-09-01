@@ -22,8 +22,4 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-<<<<<<< HEAD
         run: npx eslint helloWorld2.js
-=======
-        run: npx eslint helloWorld2.js
->>>>>>> 152953e (solucionar error lint2)
