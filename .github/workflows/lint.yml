@@ -19,10 +19,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Make eslint executable
-        run: chmod +x node_modules/.bin/eslint   
+        run: npm ci
 
       - name: Run ESLint
         run: npx eslint helloWorld2.js
