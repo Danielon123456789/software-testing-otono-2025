@@ -1,16 +1,16 @@
 {
-  "name": "software-testing-otono-2025",
-  "version": "1.0.0",
-  "description": "Repository to learn about software testing tools.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint" : "npx eslint helloWorld2.js"
-  },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
+  "description": "Repository to learn about software testing tools.",
   "devDependencies": {
     "eslint": "^9.34.0"
-  }
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "software-testing-otono-2025",
+  "scripts": {
+    "lint": "npx eslint helloWorld2.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
 }
