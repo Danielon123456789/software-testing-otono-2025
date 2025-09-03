@@ -1,0 +1,16 @@
+{
+  "author": "",
+  "description": "Repository to learn about software testing tools.",
+  "devDependencies": {
+    "eslint": "^9.34.0"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "software-testing-otono-2025",
+  "scripts": {
+    "lint": "npx eslint helloWorld2.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
