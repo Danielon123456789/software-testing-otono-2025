@@ -7,10 +7,13 @@ import unittest
 
 from white_box.class_exercises import (
     VendingMachine,
+    calculate_total_discount,
+    check_number_status,
     divide,
     get_grade,
     is_even,
     is_triangle,
+    validate_password,
 )
 
 
@@ -90,6 +93,102 @@ class TestWhiteBox(unittest.TestCase):
         Checks the three inputs can't form a triangle when A is greater or equal than B + C.
         """
         self.assertEqual(is_triangle(2, 1, 1), "No, it's not a triangle.")
+
+
+class TestCheckNumberStatus(unittest.TestCase):
+    """
+    Check number status unit tests.
+    """
+
+    def test_check_number_status_negative(self):
+        """
+        Checks negative number.
+        """
+        self.assertEqual(check_number_status(-5), "Negative")
+
+    def test_check_number_status_zero(self):
+        """
+        Checks zero.
+        """
+        self.assertEqual(check_number_status(0), "Zero")
+
+    def test_check_number_status_positive_even(self):
+        """
+        Checks positive even number.
+        """
+        self.assertEqual(check_number_status(8), "Positive")
+
+    def test_check_number_status_positive_odd(self):
+        """
+        Checks positive odd number.
+        """
+        self.assertEqual(check_number_status(7), "Positive")
+
+
+class TestValidatePassword(unittest.TestCase):
+    """
+    Validate password unit tests.
+    """
+
+    def test_validate_password_too_short(self):
+        """
+        Checks password length.
+        """
+        self.assertFalse(validate_password("short"))
+
+    def test_validate_password_no_number(self):
+        """
+        Checks password for numbers.
+        """
+        self.assertFalse(validate_password("NoNumber"))
+
+    def test_validate_password_no_uppercase(self):
+        """
+        Checks password for uppercase letters.
+        """
+        self.assertFalse(validate_password("nouppercase1"))
+
+    def test_validate_password_no_special_characters(self):
+        """
+        Checks password for special characters.
+        """
+        self.assertFalse(validate_password("NoSpecial1"))
+
+    def test_validate_password_valid(self):
+        """
+        Checks valid password.
+        """
+        self.assertTrue(validate_password("Valid1Password!"))
+
+
+class TestCalculateTotalDiscount(unittest.TestCase):
+    """
+    Calculate total discount unit tests.
+    """
+
+    def test_calculate_total_discount_no_discount(self):
+        """
+        Checks no discount applied.
+        """
+        self.assertEqual(calculate_total_discount(99), 0)
+
+    def test_calculate_total_discount_10_percent_lower_limit(self):
+        """
+        Checks 10 percent discount applied for lower limit.
+        """
+        self.assertEqual(calculate_total_discount(100), 10)
+
+    def test_calculate_total_discount_10_percent_upper_limit(self):
+        """
+        Checks 10 percent discount applied for upper limit.
+        """
+        self.assertEqual(calculate_total_discount(500), 50)
+
+    def test_calculate_total_discount_20_percent(self):
+        """
+        Checks 20 percent discount applied.
+        """
+        self.assertEqual(calculate_total_discount(501), 100.2)
 
 
 class TestWhiteBoxVendingMachine(unittest.TestCase):
