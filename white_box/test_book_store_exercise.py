@@ -9,6 +9,7 @@ from unittest.mock import patch
 from white_box.book_store import Book, BookStore, main
 
 
+# pylint: disable=duplicate-code
 class TestBook(unittest.TestCase):
     """
     Book unittest class.
