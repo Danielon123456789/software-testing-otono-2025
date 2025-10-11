@@ -5,17 +5,29 @@ White-box unit testing solution.
 import unittest
 
 from white_box.class_exercises import (
+    DocumentEditingSystem,
     ElevatorSystem,
+    UserAuthentication,
+    authenticate_user,
     calculate_items_shipping_cost,
     calculate_order_total,
+    calculate_quantity_discount,
+    calculate_shipping_cost,
     calculate_total_discount,
     categorize_product,
     celsius_to_fahrenheit,
+    check_file_size,
+    check_flight_eligibility,
+    check_loan_eligibility,
     check_number_status,
+    get_weather_advisory,
+    grade_quiz,
     validate_credit_card,
+    validate_date,
     validate_email,
     validate_login,
     validate_password,
+    validate_url,
     verify_age,
 )
 
@@ -361,7 +373,7 @@ class TestValidateCreditCard(unittest.TestCase):
     """
 
     def test_valid_card(self):
-        """Valid credit cards must be 13–16 digits long."""
+        """Valid credit cards must be 13-16 digits long."""
         self.assertEqual(validate_credit_card("1234567890123"), "Valid Card")
         self.assertEqual(validate_credit_card("1234567890123456"), "Valid Card")
 
@@ -373,6 +385,287 @@ class TestValidateCreditCard(unittest.TestCase):
     def test_invalid_characters(self):
         """Cards must contain only digits."""
         self.assertEqual(validate_credit_card("1234abcd5678"), "Invalid Card")
+
+
+class TestValidateDate(unittest.TestCase):
+    """
+    Class to test validate_date
+    """
+
+    def test_valid_dates(self):
+        """Valid years, months, and days should return 'Valid Date'."""
+        self.assertEqual(validate_date(2000, 1, 1), "Valid Date")
+
+    def test_invalid_years(self):
+        """Years outside 1900-2100 should return 'Invalid Date'."""
+        self.assertEqual(validate_date(1899, 6, 15), "Invalid Date")
+        self.assertEqual(validate_date(2101, 6, 15), "Invalid Date")
+
+    def test_invalid_months(self):
+        """Months outside 1-12 should return 'Invalid Date'."""
+        self.assertEqual(validate_date(2023, 0, 10), "Invalid Date")
+        self.assertEqual(validate_date(2023, 13, 10), "Invalid Date")
+
+    def test_invalid_days(self):
+        """Days outside 1-31 should return 'Invalid Date'."""
+        self.assertEqual(validate_date(2023, 5, 0), "Invalid Date")
+        self.assertEqual(validate_date(2023, 5, 32), "Invalid Date")
+
+
+class TestCheckFlightEligibility(unittest.TestCase):
+    """
+    class to test check_flight_eligibility
+    """
+
+    def test_eligible_age(self):
+        """Ages between 18-65 should be eligible."""
+        self.assertEqual(check_flight_eligibility(18, False), "Eligible to Book")
+        self.assertEqual(check_flight_eligibility(65, False), "Eligible to Book")
+
+    def test_not_eligible_age(self):
+        """Ages below 18 or above 65 should not be eligible."""
+        self.assertEqual(check_flight_eligibility(17, False), "Not Eligible to Book")
+        self.assertEqual(check_flight_eligibility(66, False), "Not Eligible to Book")
+
+    def test_frequent_flyer_override(self):
+        """Frequent flyers should always be eligible regardless of age."""
+        self.assertEqual(check_flight_eligibility(15, True), "Eligible to Book")
+        self.assertEqual(check_flight_eligibility(80, True), "Eligible to Book")
+
+
+class TestValidateURL(unittest.TestCase):
+    """
+    class to test validate_url
+    """
+
+    def test_valid_http_urls(self):
+        """URLs starting with http:// or https:// and <=255 chars are valid."""
+        self.assertEqual(validate_url("http://example.com"), "Valid URL")
+        self.assertEqual(validate_url("https://example.org/page?id=1"), "Valid URL")
+
+    def test_invalid_prefix(self):
+        """URLs without valid prefix should be invalid."""
+        self.assertEqual(validate_url("ftp://example.com"), "Invalid URL")
+        self.assertEqual(validate_url("www.example.com"), "Invalid URL")
+
+    def test_invalid_length(self):
+        """URLs longer than 255 characters should be invalid."""
+        long_url = "http://" + "a" * 250
+        self.assertEqual(validate_url(long_url), "Invalid URL")
+
+
+class TestCalculateQuantityDiscount(unittest.TestCase):
+    """
+    class to test calculate_quantity_discount
+    """
+
+    def test_no_discount_boundary(self):
+        """Quantities at or below 5 should return 'No Discount'."""
+        self.assertEqual(calculate_quantity_discount(1), "No Discount")
+        self.assertEqual(calculate_quantity_discount(5), "No Discount")
+
+    def test_5_percent_discount_boundary(self):
+        """Quantities from 6 to 10 should return '5% Discount'."""
+        self.assertEqual(calculate_quantity_discount(6), "5% Discount")
+        self.assertEqual(calculate_quantity_discount(10), "5% Discount")
+
+    def test_10_percent_discount_boundary(self):
+        """Quantities above 10 should return '10% Discount'."""
+        self.assertEqual(calculate_quantity_discount(11), "10% Discount")
+
+
+class TestCheckFileSize(unittest.TestCase):
+    """
+    class to test check_file_size
+    """
+
+    def test_valid_file_size_boundary(self):
+        """File sizes between 0 and 1MB (inclusive) should be valid."""
+        self.assertEqual(check_file_size(0), "Valid File Size")
+        self.assertEqual(check_file_size(1048576), "Valid File Size")
+
+    def test_invalid_file_size_boundary(self):
+        """File sizes below 0 or above 1MB should be invalid."""
+        self.assertEqual(check_file_size(-1), "Invalid File Size")  # below lower limit
+        self.assertEqual(
+            check_file_size(1048577), "Invalid File Size"
+        )  # above upper limit
+
+
+class TestCheckLoanEligibility(unittest.TestCase):
+    """
+    class to test check_loan_eligibility
+    """
+
+    def test_not_eligible_low_income(self):
+        """Income below 30000 should not be eligible."""
+        self.assertEqual(check_loan_eligibility(25000, 800), "Not Eligible")
+
+    def test_standard_or_secured_for_mid_income(self):
+        """Income between 30000 and 60000: depends on credit score."""
+        self.assertEqual(check_loan_eligibility(40000, 710), "Standard Loan")
+        self.assertEqual(check_loan_eligibility(40000, 650), "Secured Loan")
+
+    def test_high_income_premium_or_standard(self):
+        """High income (>60000): premium if credit_score > 750, otherwise standard."""
+        self.assertEqual(check_loan_eligibility(70000, 760), "Premium Loan")
+        self.assertEqual(check_loan_eligibility(70000, 740), "Standard Loan")
+
+
+class TestCalculateShippingCost(unittest.TestCase):
+    """
+    class to test calculate_shipping_cost
+    """
+
+    def test_small_package(self):
+        """Small and light packages should cost 5."""
+        self.assertEqual(calculate_shipping_cost(1, 10, 10, 10), 5)
+
+    def test_medium_package(self):
+        """Medium packages should cost 10."""
+        self.assertEqual(calculate_shipping_cost(3, 15, 20, 25), 10)
+
+    def test_large_package(self):
+        """Large or heavy packages should cost 20."""
+        self.assertEqual(calculate_shipping_cost(6, 40, 50, 60), 20)
+
+
+class TestGradeQuiz(unittest.TestCase):
+    """
+    class to test grade_quiz
+    """
+
+    def test_pass(self):
+        """At least 7 correct and at most 2 incorrect should pass."""
+        self.assertEqual(grade_quiz(7, 2), "Pass")
+
+    def test_conditional_pass(self):
+        """Between 5-6 correct and ≤3 incorrect should be conditional pass."""
+        self.assertEqual(grade_quiz(6, 3), "Conditional Pass")
+
+    def test_fail(self):
+        """Other cases should fail."""
+        self.assertEqual(grade_quiz(4, 3), "Fail")
+
+
+class TestAuthenticateUser(unittest.TestCase):
+    """
+    class to test authenticate_user
+    """
+
+    def test_admin_credentials(self):
+        """Admin credentials should authenticate as Admin."""
+        self.assertEqual(authenticate_user("admin", "admin123"), "Admin")
+
+    def test_valid_user_credentials(self):
+        """Valid credentials (not admin) should authenticate as User."""
+        self.assertEqual(authenticate_user("daniel", "mypassword"), "User")
+
+    def test_invalid_credentials(self):
+        """Short username or password should be invalid."""
+        self.assertEqual(authenticate_user("usr", "12345678"), "Invalid")
+        self.assertEqual(authenticate_user("daniel", "short"), "Invalid")
+
+
+class TestGetWeatherAdvisory(unittest.TestCase):
+    """
+    class to test get_weather_advisory
+    """
+
+    def test_valid_temperature_humidity(self):
+        """Valid temperature and humidity"""
+        self.assertEqual(
+            get_weather_advisory(31, 71),
+            "High Temperature and Humidity. Stay Hydrated.",
+        )
+
+    def test_invalid_temperature_humidity(self):
+        """Invalid temperature and humidity"""
+        self.assertEqual(get_weather_advisory(31, 70), "No Specific Advisory")
+
+    def test_low_temperature(self):
+        """Invalid temperature and humidity"""
+        self.assertEqual(get_weather_advisory(-1, 71), "Low Temperature. Bundle Up!")
+
+
+class TestUserAuthentication(unittest.TestCase):
+    """
+    class to test UserAuthentication
+    """
+
+    def setUp(self):
+        """Initialize a new UserAuthentication object before each test."""
+        self.auth = UserAuthentication()
+
+    def test_initial_state(self):
+        """Initial state should be 'Logged Out'."""
+        self.assertEqual(self.auth.state, "Logged Out")
+
+    def test_successful_login(self):
+        """Login from 'Logged Out' should change state to 'Logged In'."""
+        result = self.auth.login()
+        self.assertEqual(result, "Login successful")
+        self.assertEqual(self.auth.state, "Logged In")
+
+    def test_invalid_login_when_logged_in(self):
+        """Login when already 'Logged In' should be invalid."""
+        self.auth.login()
+        result = self.auth.login()
+        self.assertEqual(result, "Invalid operation in current state")
+        self.assertEqual(self.auth.state, "Logged In")
+
+    def test_successful_logout(self):
+        """Logout from 'Logged In' should change state to 'Logged Out'."""
+        self.auth.login()
+        result = self.auth.logout()
+        self.assertEqual(result, "Logout successful")
+        self.assertEqual(self.auth.state, "Logged Out")
+
+    def test_invalid_logout_when_logged_out(self):
+        """Logout when already 'Logged Out' should be invalid."""
+        result = self.auth.logout()
+        self.assertEqual(result, "Invalid operation in current state")
+        self.assertEqual(self.auth.state, "Logged Out")
+
+
+class TestDocumentEditingSystem(unittest.TestCase):
+    """
+    class to test DocumentEditingSystem
+    """
+
+    def setUp(self):
+        """Initialize a new DocumentEditingSystem object before each test."""
+        self.doc = DocumentEditingSystem()
+
+    def test_initial_state(self):
+        """Initial state should be 'Editing'."""
+        self.assertEqual(self.doc.state, "Editing")
+
+    def test_successful_save(self):
+        """Saving from 'Editing' should change state to 'Saved'."""
+        result = self.doc.save_document()
+        self.assertEqual(result, "Document saved successfully")
+        self.assertEqual(self.doc.state, "Saved")
+
+    def test_invalid_save_when_already_saved(self):
+        """Saving when already 'Saved' should be invalid."""
+        self.doc.save_document()
+        result = self.doc.save_document()
+        self.assertEqual(result, "Invalid operation in current state")
+        self.assertEqual(self.doc.state, "Saved")
+
+    def test_successful_edit_after_save(self):
+        """Editing from 'Saved' should return to 'Editing'."""
+        self.doc.save_document()
+        result = self.doc.edit_document()
+        self.assertEqual(result, "Editing resumed")
+        self.assertEqual(self.doc.state, "Editing")
+
+    def test_invalid_edit_when_editing(self):
+        """Editing when already 'Editing' should be invalid."""
+        result = self.doc.edit_document()
+        self.assertEqual(result, "Invalid operation in current state")
+        self.assertEqual(self.doc.state, "Editing")
 
 
 class TestElevatorSystem(unittest.TestCase):
