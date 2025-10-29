@@ -5,7 +5,7 @@ Test Driven Development (TDD) tests.
 """
 import unittest
 
-from tdd.exercises import fizzbuzz
+from tdd.exercises import add, fizzbuzz
 
 
 class TestFizzBuzz(unittest.TestCase):
@@ -68,3 +68,39 @@ class TestFizzBuzz(unittest.TestCase):
         self.assertEqual(fizzbuzz(30), "FizzBuzz")
         self.assertEqual(fizzbuzz(45), "FizzBuzz")
         self.assertEqual(fizzbuzz(-45), "FizzBuzz")
+
+
+class TestAdd(unittest.TestCase):
+    """
+    Kata 2 - String calculator
+    Create a simple calculator that takes a String and returns a integer.
+
+    Requirements
+    1. The method can take up to two numbers, separated by commas, and will return their sum as a
+    result. So the inputs can be: “”, “1”, “1,2”. For an empty string, it will return 0.
+
+    Notes:
+    Start with the simplest case (empty string) and extend it with the more advanced cases
+    (“1” and “1,2”) step by step keep the three rules in mind and always write just
+    sufficient enough code do not forget to refactor your code after each passing test.
+    """
+
+    def test_add_should_return_0_when_numbers_is_an_empty_string(self):
+        """
+        Tests that add returns 0 for an empty string.
+        """
+        self.assertEqual(add(""), 0)
+
+    def test_add_should_return_number_when_numbers_contains_a_single_number(self):
+        """
+        Tests that add returns the number for a single number.
+        """
+        self.assertEqual(add("1"), 1)
+        self.assertEqual(add("2"), 2)
+
+    def test_add_should_return_sum_when_numbers_contains_two_numbers(self):
+        """
+        Tests that add returns the sum for two numbers.
+        """
+        self.assertEqual(add("1,2"), 3)
+        self.assertEqual(add("2,3"), 5)
